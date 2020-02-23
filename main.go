@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+
 	"usermanagement/models"
+	userHandler "usermanagement/user/handler"
+	userRepository "usermanagement/user/repository"
+	userService "usermanagement/user/service"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-
-	userHandler "usermanagement/user/handler"
-	userRepository "usermanagement/user/repository"
-	userService "usermanagement/user/service"
 )
 
 func init()  {
@@ -30,7 +30,7 @@ func main()  {
 	dbUser := viper.GetString("database.user")
 	dbPass := viper.GetString("database.pass")
 	dbName := viper.GetString("database.name")
-	serverPort := viper.GetString("server.port")
+	serverAddress := viper.GetString("server.address")
 
 	connUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUser, dbName, dbPass)
 	dbConnect, err := gorm.Open("postgres", connUri)
@@ -54,12 +54,12 @@ func main()  {
 		&models.User{},
 		)
 
-	router := mux.NewRouter().StrictSlash(true)
+	r := mux.NewRouter()
 
 	userRepository := userRepository.CreateUserRepositoryImpl(dbConnect)
 	userService := userService.CreateUserService(userRepository)
-	userHandler.CreateUserHandler(router, userService)
+	userHandler.CreateUserHandler(r, userService)
 
-	logrus.Info("Starting web server at http://localhost:", serverPort)
-	logrus.Fatal(http.ListenAndServe(":" + serverPort, router))
+	logrus.Info("Starting web server at ", serverAddress)
+	logrus.Fatal(http.ListenAndServe(serverAddress, r))
 }

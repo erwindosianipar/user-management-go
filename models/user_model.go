@@ -16,6 +16,6 @@ type User struct {
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Name string `json:"name"`
-	Age string `json:"age"`
+	Age int `json:"age" sql:"DEFAULT:18"`
 	Address string `json:"address"`
 }
