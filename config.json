@@ -1,6 +1,6 @@
 {
   "server" : {
-    "port" : "9002"
+    "address" : ":9002"
   },
   "database" : {
     "host" : "localhost",
