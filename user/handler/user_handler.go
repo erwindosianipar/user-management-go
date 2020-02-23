@@ -11,6 +11,7 @@ import (
 	"usermanagement/user"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,10 +25,10 @@ func CreateUserHandler(r *mux.Router, userService user.UserService) {
 	r.StrictSlash(true)
 	r.HandleFunc("/user/register", userHandler.register).Methods(http.MethodPost)
 	r.HandleFunc("/user/login", userHandler.login).Methods(http.MethodPost)
-	r.HandleFunc("/user/all", userHandler.getAllUser).Methods(http.MethodGet)
-	r.HandleFunc("/user/{id}", userHandler.getUserById).Methods(http.MethodGet)
-	r.HandleFunc("/user/{id}", userHandler.updateUser).Methods(http.MethodPut)
-	r.HandleFunc("/user/{id}", userHandler.deleteUser).Methods(http.MethodDelete)
+	r.HandleFunc("/user/all", commons.TokenVerifyMiddleware(userHandler.getAllUser)).Methods(http.MethodGet)
+	r.HandleFunc("/user/{id}", commons.TokenVerifyMiddleware(userHandler.getUserById)).Methods(http.MethodGet)
+	r.HandleFunc("/user/{id}", commons.TokenVerifyMiddleware(userHandler.updateUser)).Methods(http.MethodPut)
+	r.HandleFunc("/user/{id}", commons.TokenVerifyMiddleware(userHandler.deleteUser)).Methods(http.MethodDelete)
 }
 
 func (h *UserHandler) register(writer http.ResponseWriter, request *http.Request) {
@@ -67,6 +68,7 @@ func (h *UserHandler) register(writer http.ResponseWriter, request *http.Request
 }
 
 func (h *UserHandler) login(writer http.ResponseWriter, request *http.Request) {
+	var jwt models.JWT
 	reqBody, err := ioutil.ReadAll(request.Body)
 	if err != nil {
 		commons.Response(writer, http.StatusBadRequest, commons.Message(false, "Oops, something went wrong."))
@@ -92,15 +94,23 @@ func (h *UserHandler) login(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	hashedPassword := dataUser.Password
-	mapResponse := commons.Message(true, "success: user already logged in")
-	mapResponse["response"] = dataUser
-
-	if commons.ComparePassword(hashedPassword, []byte(reqUser.Password)) {
-		commons.Response(writer, http.StatusOK, mapResponse)
+	if !(commons.ComparePassword(hashedPassword, []byte(reqUser.Password))) {
+		commons.Response(writer, http.StatusBadRequest, commons.Message(false, "Email or password did not match."))
 		return
 	}
 
-	commons.Response(writer, http.StatusBadRequest, commons.Message(false, "Email or password did not match."))
+	token, err := commons.GenerateToken(dataUser)
+	if err != nil {
+		logrus.Fatal("[UserHandler.login.GenerateToken]", err)
+	}
+
+	jwt.Token = token
+	jwt.Id = dataUser.ID
+
+	mapResponse := commons.Message(true, "success: user already logged in")
+	mapResponse["response"] = jwt
+
+	commons.Response(writer, http.StatusOK, mapResponse)
 	return
 }
 
