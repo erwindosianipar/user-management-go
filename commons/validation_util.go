@@ -3,6 +3,7 @@ package commons
 import (
 	"net/http"
 	"regexp"
+
 	"usermanagement/models"
 
 	"golang.org/x/crypto/bcrypt"

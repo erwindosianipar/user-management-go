@@ -1,12 +1,15 @@
 {
-  "server" : {
-    "address" : ":9002"
-  },
   "database" : {
     "host" : "localhost",
     "port" : "5432",
     "user" : "postgres",
     "pass" : "erwindosianipar",
     "name" : "usermanagement"
+  },
+  "server" : {
+    "address" : ":9002"
+  },
+  "secret" : {
+    "key" : "SECRET-KEY"
   }
 }
