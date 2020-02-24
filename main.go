@@ -54,12 +54,12 @@ func main()  {
 		&models.User{},
 		)
 
-	r := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 
 	userRepository := userRepository.CreateUserRepositoryImpl(dbConnect)
 	userService := userService.CreateUserService(userRepository)
-	userHandler.CreateUserHandler(r, userService)
+	userHandler.CreateUserHandler(router, userService)
 
 	logrus.Info("Starting web server at ", serverAddress)
-	logrus.Fatal(http.ListenAndServe(serverAddress, r))
+	logrus.Fatal(http.ListenAndServe(":"+serverAddress, router))
 }
