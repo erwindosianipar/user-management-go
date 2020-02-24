@@ -7,7 +7,7 @@
     "name" : "usermanagement"
   },
   "server" : {
-    "address" : ":9002"
+    "address" : "9002"
   },
   "secret" : {
     "key" : "SECRET-KEY"

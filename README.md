@@ -65,6 +65,10 @@ Response
 | -- | -- |
 | GET | /user/all |
 
+| Token | Value |
+| -- | -- |
+| Bearer | XXX |
+
 Response
 ```json
 {
@@ -114,6 +118,10 @@ Response
 | -- | -- |
 | GET | /user/{id} |
 
+| Token | Value |
+| -- | -- |
+| Bearer | XXX |
+
 Response
 ```json
 {
@@ -138,6 +146,10 @@ Response
 | Method | URL |
 | -- | -- |
 | PUT | /user/{id} |
+
+| Token | Value |
+| -- | -- |
+| Bearer | XXX |
 
 Request
 ```json
@@ -172,6 +184,10 @@ Response
 | Method | URL |
 | -- | -- |
 | DELETE | /user/{id} |
+
+| Token | Value |
+| -- | -- |
+| Bearer | XXX |
 
 Response
 ```json

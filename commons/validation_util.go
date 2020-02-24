@@ -1,6 +1,7 @@
 package commons
 
 import (
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"regexp"
 
@@ -26,6 +27,7 @@ func ComparePassword(hashedPassword string, password []byte) bool {
 func ValidateNameEmailPass(writer http.ResponseWriter, user models.User) bool {
 	if len(user.Name) < 3 {
 		Response(writer, http.StatusBadRequest, Message(false, "Name cannot be empty and al least 3 character."))
+		logrus.Error("name empty")
 		return false
 	}
 
@@ -40,16 +42,19 @@ func ValidateNameEmailPass(writer http.ResponseWriter, user models.User) bool {
 func ValidateEmailPass(writer http.ResponseWriter, user models.User) bool {
 	if len(user.Email) < 1 {
 		Response(writer, http.StatusBadRequest, Message(false, "Email cannot be empty."))
+		logrus.Error("email empty")
 		return false
 	}
 
 	if !(IsEmailValid(user.Email)) {
 		Response(writer, http.StatusBadRequest, Message(false, "Please insert a valid email address."))
+		logrus.Error("email not valid")
 		return false
 	}
 
 	if len(user.Password) < 8 {
 		Response(writer, http.StatusBadRequest, Message(false, "Password cannot be empty and at least 8 character."))
+		logrus.Error("password empty")
 		return false
 	}
 
