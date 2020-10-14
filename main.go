@@ -27,11 +27,14 @@ func init() {
 
 func main() {
 	dbHost := viper.GetString("database.host")
-	dbPort := os.Getenv("PORT")
+	dbPort := viper.GetString("database.port")
 	dbUser := viper.GetString("database.user")
 	dbPass := viper.GetString("database.pass")
 	dbName := viper.GetString("database.name")
-	serverAddress := viper.GetString("server.address")
+	serverAddress := os.Getenv("PORT")
+	if serverAddress == "" {
+		logrus.Fatal("$PORT must be set")
+	}
 
 	connUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=require", dbHost, dbPort, dbUser, dbName, dbPass)
 	dbConnect, err := gorm.Open("postgres", connUri)
