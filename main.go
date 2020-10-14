@@ -32,7 +32,7 @@ func main()  {
 	dbName := viper.GetString("database.name")
 	serverAddress := viper.GetString("server.address")
 
-	connUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUser, dbName, dbPass)
+	connUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=require", dbHost, dbPort, dbUser, dbName, dbPass)
 	dbConnect, err := gorm.Open("postgres", connUri)
 	if err != nil {
 		logrus.Fatal("[main.connection.open] ", err)
