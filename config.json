@@ -1,10 +1,10 @@
 {
   "database" : {
-    "host" : "localhost",
+    "host" : "ec2-54-157-234-29.compute-1.amazonaws.com",
     "port" : "5432",
-    "user" : "postgres",
-    "pass" : "erwindosianipar",
-    "name" : "usermanagement"
+    "user" : "ipbozotuhdeezp",
+    "pass" : "2811e3a8890d0de59fc274e311d541236f6785c42b52c4be7bf4b9c7aa673dae",
+    "name" : "d871lr2rgs49cv"
   },
   "server" : {
     "address" : "9002"
