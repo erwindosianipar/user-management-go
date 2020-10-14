@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"usermanagement/models"
 	userHandler "usermanagement/user/handler"
@@ -16,7 +17,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func init()  {
+func init() {
 	viper.SetConfigFile("config.json")
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -24,9 +25,9 @@ func init()  {
 	}
 }
 
-func main()  {
+func main() {
 	dbHost := viper.GetString("database.host")
-	dbPort := viper.GetString("database.port")
+	dbPort := os.Getenv("PORT")
 	dbUser := viper.GetString("database.user")
 	dbPass := viper.GetString("database.pass")
 	dbName := viper.GetString("database.name")
@@ -52,7 +53,7 @@ func main()  {
 
 	dbConnect.Debug().AutoMigrate(
 		&models.User{},
-		)
+	)
 
 	router := mux.NewRouter().StrictSlash(true)
 
